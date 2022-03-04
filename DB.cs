@@ -63,8 +63,21 @@ namespace Microsoft.AdoNet.DataSetDemo
                     connection);
                 costAdapter.SelectCommand = costCommand;
 
-                //Fill the DataSet
+                //Fill the DataSet.
                 costAdapter.Fill(dataSet);                
+                
+                //Creating a 4th adapter:
+
+               SqlDataAdapter checkAvailability = SqlDataAdapter();
+               AvailabilityAdapter.TablesMappings.Add("Tables","Availability");
+
+               SqlCommand checkAvailabilityCommand = new SqlCommand(
+                   "SELECT Check FROM dbo.Availability",
+                    connection);
+                checkAvailability.SelectCommand = checkAvailabilityCommand;
+            
+                //Fill the dataset
+                checkAvailability.Fill(dataSet);
 
                 // Close the connection.
                 connection.Close();
@@ -78,8 +91,10 @@ namespace Microsoft.AdoNet.DataSetDemo
                     dataSet.Tables["Products"].Columns["SupplierID"];
                 DataColumn childColumn =
                     dataSet.Tables["costs"].Columns["ProductCost"];
+                DataColumn childColumn =
+                    dataSet.Tables["Availavilty"].Columns["ProductAvailability"];
                 DataRelation relation =
-                    new System.Data.DataRelation("SuppliersProducts", "ProductCost",
+                    new System.Data.DataRelation("SuppliersProducts", "ProductCost", "ProductAvailability",
                     parentColumn, childColumn);
                 dataSet.Relations.Add(relation);
                 Console.WriteLine(
